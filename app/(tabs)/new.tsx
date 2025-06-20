@@ -3,16 +3,16 @@ import { useRouter } from "expo-router";
 import { Info } from "lucide-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Alert,
-  Animated,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Alert,
+    Animated,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import MoodSelector from "../../components/MoodSelector";
 import { Entry, getAllEntries } from "../../utils/storage";
@@ -151,7 +151,6 @@ export default function NewEntryScreen() {
                   },
                 ]}
               >
-                <View style={styles.speechArrowBottomLeft} />
                 <Text style={styles.tooltipText}>
                   If you have already entered a mood today, you can only update
                   it for now :)

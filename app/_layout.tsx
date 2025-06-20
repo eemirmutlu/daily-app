@@ -1,16 +1,18 @@
 import {
-  Manrope_400Regular,
-  Manrope_600SemiBold,
-  Manrope_700Bold,
-  useFonts,
+    Manrope_400Regular,
+    Manrope_600SemiBold,
+    Manrope_700Bold,
+    useFonts,
 } from "@expo-google-fonts/manrope";
 import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider,
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import * as SystemUI from 'expo-system-ui';
+import React from "react";
 import { ActivityIndicator, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
@@ -24,6 +26,10 @@ export default function RootLayout() {
     Manrope_600SemiBold,
     Manrope_700Bold,
   });
+
+  React.useEffect(() => {
+    SystemUI.setBackgroundColorAsync('#fff');
+  }, []);
 
   if (!fontsLoaded) {
     return (

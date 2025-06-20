@@ -1,15 +1,19 @@
 import { Tabs } from "expo-router";
 import { BarChart2, BookOpen, Home, PlusCircle } from "lucide-react-native";
 import React from "react";
-import { Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Platform, View } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
+  const tabBarBgColor = "#fff";
+  const tabBarHeight = Platform.OS === "ios" ? 80 : 60;
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "#e0c3fc" }}
       edges={["bottom", "left", "right"]}
     >
+      <View style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: insets.bottom, backgroundColor: tabBarBgColor, zIndex: 0 }} />
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -20,10 +24,10 @@ export default function TabLayout() {
             fontWeight: "600",
           },
           tabBarStyle: {
-            backgroundColor: "#ffffff",
+            backgroundColor: tabBarBgColor,
             borderTopWidth: 1,
             borderTopColor: "#E5E5E5",
-            height: Platform.OS === "ios" ? 80 : 60,
+            height: tabBarHeight,
             paddingBottom: Platform.OS === "ios" ? 20 : 10,
             paddingTop: 5,
             shadowColor: "#000",
@@ -32,6 +36,7 @@ export default function TabLayout() {
             shadowRadius: 10,
             elevation: 5,
             position: "absolute",
+            bottom: 0,
           },
         }}
       >

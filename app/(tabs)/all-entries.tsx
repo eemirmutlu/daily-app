@@ -2,13 +2,13 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Info } from "lucide-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Animated,
-  Easing,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    Animated,
+    Easing,
+    FlatList,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import CustomBottomSheet from "../../components/CustomBottomSheet";
 import JournalCard from "../../components/JournalCard";
@@ -121,7 +121,6 @@ export default function AllEntriesScreen() {
                     },
                   ]}
                 >
-                  <View style={styles.speechArrowBottomLeft} />
                   <Text style={styles.tooltipText}>
                     Here you can see all your moods.
                   </Text>

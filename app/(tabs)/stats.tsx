@@ -2,14 +2,14 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Info } from "lucide-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Animated,
-  Dimensions,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    Animated,
+    Dimensions,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import ChartBottomSheet from "../../components/ChartBottomSheet";
 import MoodChart from "../../components/MoodChart";
@@ -23,6 +23,49 @@ const MOOD_MAP: Record<string, number> = {
   "😭": 1,
 };
 const MOOD_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const tooltipStyles = StyleSheet.create({
+  tooltip: {
+    position: "absolute",
+    top: 44,
+    right: 0,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#ede7f6",
+    shadowColor: "#b8b8ff",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 4,
+    minWidth: 220,
+    zIndex: 30,
+  },
+  tooltipText: {
+    color: "#7c4dff",
+    fontSize: 15,
+    fontFamily: "Manrope",
+    textAlign: "center",
+    flexWrap: "wrap",
+  },
+  tooltipBottomLeft: {
+    position: "absolute",
+    left: -240,
+    top: 36,
+    minWidth: 240,
+    zIndex: 1001,
+    elevation: 21,
+  },
+  tooltipOverlay: {
+    position: "absolute",
+    top: -24,
+    left: -1000,
+    right: -1000,
+    bottom: -24,
+    zIndex: 10,
+  },
+});
 
 export default function StatsScreen() {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -123,14 +166,14 @@ export default function StatsScreen() {
           {tooltipVisible && (
             <>
               <TouchableOpacity
-                style={styles.statsTooltipOverlay}
+                style={tooltipStyles.tooltipOverlay}
                 activeOpacity={1}
                 onPress={closeTooltip}
               />
               <Animated.View
                 style={[
-                  styles.statsTooltip,
-                  styles.statsTooltipBottomLeft,
+                  tooltipStyles.tooltip,
+                  tooltipStyles.tooltipBottomLeft,
                   {
                     opacity: tooltipAnim,
                     transform: [
@@ -144,8 +187,7 @@ export default function StatsScreen() {
                   },
                 ]}
               >
-                <View style={styles.speechArrowBottomLeft} />
-                <Text style={styles.statsTooltipText}>
+                <Text style={tooltipStyles.tooltipText}>
                   Long press the chart to see details
                 </Text>
               </Animated.View>
@@ -334,42 +376,6 @@ const styles = StyleSheet.create({
     fontFamily: "Manrope",
     marginBottom: 18,
   },
-  statsTooltip: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#ede7f6",
-    shadowColor: "#b8b8ff",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 20,
-    marginTop: 18,
-    marginBottom: 8,
-    alignItems: "center",
-    zIndex: 1000,
-  },
-  statsTooltipText: {
-    color: "#7c4dff",
-    fontSize: 15,
-    fontFamily: "Manrope",
-    textAlign: "center",
-  },
-  speechArrow: {
-    position: "absolute",
-    top: -10,
-    left: "50%",
-    marginLeft: -12,
-    width: 0,
-    height: 0,
-    borderLeftWidth: 12,
-    borderRightWidth: 12,
-    borderBottomWidth: 12,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "#fff",
-  },
   statsInfoBtn: {
     backgroundColor: "#fff",
     borderRadius: 12,
@@ -384,36 +390,5 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
     marginLeft: 8,
-  },
-  statsTooltipOverlay: {
-    position: "absolute",
-    top: -24,
-    left: -1000,
-    right: -1000,
-    bottom: -24,
-    zIndex: 10,
-  },
-  statsTooltipBottomLeft: {
-    position: "absolute",
-    left: -220,
-    top: 36,
-    minWidth: 220,
-    zIndex: 1001,
-    elevation: 21,
-  },
-  speechArrowBottomLeft: {
-    position: "absolute",
-    top: -10,
-    right: 16,
-    width: 0,
-    height: 0,
-    borderLeftWidth: 12,
-    borderRightWidth: 12,
-    borderBottomWidth: 12,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "#fff",
-    zIndex: 1002,
-    elevation: 22,
   },
 });

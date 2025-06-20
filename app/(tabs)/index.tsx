@@ -5,13 +5,13 @@ import { useRouter } from "expo-router";
 import { Info, PlusCircle } from "lucide-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Animated,
-  Easing,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    Animated,
+    Easing,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import CustomBottomSheet from "../../components/CustomBottomSheet";
 import JournalCard from "../../components/JournalCard";
@@ -208,7 +208,6 @@ export default function HomeScreen() {
                     },
                   ]}
                 >
-                  <View style={styles.speechArrowBottomLeft} />
                   <Text style={styles.tooltipText}>
                     Only your moods for this week are shown here.
                   </Text>
