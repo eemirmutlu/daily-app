@@ -1,45 +1,75 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Tabs } from "expo-router";
+import { BarChart2, BookOpen, Home, PlusCircle } from "lucide-react-native";
+import React from "react";
+import { Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#e0c3fc" }}
+      edges={["bottom", "left", "right"]}
+    >
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: "#7B61FF",
+          tabBarInactiveTintColor: "#999",
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "600",
           },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarStyle: {
+            backgroundColor: "#ffffff",
+            borderTopWidth: 1,
+            borderTopColor: "#E5E5E5",
+            height: Platform.OS === "ios" ? 80 : 60,
+            paddingBottom: Platform.OS === "ios" ? 20 : 10,
+            paddingTop: 5,
+            shadowColor: "#000",
+            shadowOpacity: 0.05,
+            shadowOffset: { width: 0, height: -2 },
+            shadowRadius: 10,
+            elevation: 5,
+            position: "absolute",
+          },
         }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "Home",
+            tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+          }}
+        />
+        <Tabs.Screen
+          name="new"
+          options={{
+            title: "New",
+            tabBarIcon: ({ color, size }) => (
+              <PlusCircle color={color} size={size} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="stats"
+          options={{
+            title: "Stats",
+            tabBarIcon: ({ color, size }) => (
+              <BarChart2 color={color} size={size} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="all-entries"
+          options={{
+            title: "All Entries",
+            tabBarIcon: ({ color, size }) => (
+              <BookOpen color={color} size={size} />
+            ),
+          }}
+        />
+      </Tabs>
+    </SafeAreaView>
   );
 }

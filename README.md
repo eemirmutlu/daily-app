@@ -48,3 +48,52 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## Mood Journal App
+
+A beautiful, offline-first mood and journal tracker built with Expo Router and React Native.
+
+### Features
+- 100% offline (AsyncStorage)
+- Mood emoji picker and journal entry
+- Home: List of past entries
+- Floating + button to add new entry
+- Weekly mood analytics (bar chart)
+- AdMob banner (Home) and rewarded ad (Stats)
+- Pastel, modern, neumorphic UI
+
+### Folder Structure
+```
+app/
+├── _layout.tsx
+├── (tabs)/
+│   ├── _layout.tsx
+│   ├── index.tsx
+│   ├── new.tsx
+│   └── stats.tsx
+└── +not-found.tsx
+components/
+├── MoodSelector.tsx
+├── JournalCard.tsx
+└── MoodChart.tsx
+utils/
+└── storage.ts
+```
+
+### Setup
+1. `npm install`
+2. `npx expo start`
+
+### AdMob
+- Banner and rewarded ads use Google test IDs by default.
+- Replace with your own AdMob IDs for production.
+
+### Tech
+- Expo Router
+- AsyncStorage
+- react-native-admob
+- react-native-chart-kit
+- lucide-react-native
+
+---
+MIT License

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "aliskanlik-takip-app",
-    "slug": "aliskanlik-takip-app",
+    "name": "Daily App",
+    "slug": "daily-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.eemirmutlu.aliskanliktakipapp"
     },
     "web": {
       "bundler": "metro",
@@ -33,10 +34,18 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "36b4f1a2-b7a2-49a4-a23b-c3046b948980"
+      }
+    },
+    "owner": "emirmutlu"
   }
 }
