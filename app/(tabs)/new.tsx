@@ -1,18 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { Info } from "lucide-react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
-    Alert,
-    Animated,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import MoodSelector from "../../components/MoodSelector";
 import { Entry, getAllEntries } from "../../utils/storage";
@@ -33,35 +34,40 @@ export default function NewEntryScreen() {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const tooltipAnim = useRef(new Animated.Value(0)).current;
 
-  // On mount/focus, check if there is an entry for today
-  useEffect(() => {
-    const checkTodayEntry = async () => {
-      const entries = await getAllEntries();
-      const today = new Date();
-      const found = entries.find((e) => isSameDay(new Date(e.date), today));
-      if (found) {
-        setMood(found.mood);
-        setContent(found.content);
-        setTodayEntryId(found.id);
-      } else {
-        setMood("");
-        setContent("");
-        setTodayEntryId(null);
-      }
-    };
-    checkTodayEntry();
-  }, []);
+  // On focus, check if there is an entry for today
+  useFocusEffect(
+    React.useCallback(() => {
+      const checkTodayEntry = async () => {
+        const entries = await getAllEntries();
+        const today = new Date();
+        const found = entries.find((e) => isSameDay(new Date(e.date), today));
+        if (found) {
+          setMood(found.mood);
+          setContent(found.content);
+          setTodayEntryId(found.id);
+        } else {
+          setMood("");
+          setContent("");
+          setTodayEntryId(null);
+        }
+      };
+      checkTodayEntry();
+    }, [])
+  );
 
   const handleSave = async () => {
     if (!mood || !content.trim()) {
       Alert.alert("Please select a mood and write something.");
       return;
     }
+    
     const today = new Date();
+    
     let entry: Entry;
     // Remove all entries for today
     const entries = await getAllEntries();
     const filtered = entries.filter((e) => !isSameDay(new Date(e.date), today));
+    
     if (todayEntryId) {
       // Update today's entry
       entry = {
@@ -79,12 +85,15 @@ export default function NewEntryScreen() {
         date: today.toISOString(),
       };
     }
+    
     const newEntries = [entry, ...filtered];
     await AsyncStorage.setItem(
       "mood_journal_entries",
       JSON.stringify(newEntries)
     );
-    router.back();
+    
+    // Use replace to force refresh of the home screen
+    router.replace("/(tabs)");
   };
 
   const handleInfoPress = () => {
@@ -170,15 +179,21 @@ export default function NewEntryScreen() {
             <MoodSelector value={mood} onChange={setMood} />
           </View>
           <Text style={styles.label}>Journal</Text>
-          <TextInput
-            style={styles.input}
-            multiline
-            placeholder="Write about your day..."
-            value={content}
-            onChangeText={setContent}
-            textAlignVertical="top"
-            placeholderTextColor="#b8b8ff"
-          />
+          <ScrollView 
+            style={styles.inputContainer}
+            nestedScrollEnabled={true}
+            showsVerticalScrollIndicator={true}
+          >
+            <TextInput
+              style={styles.input}
+              multiline
+              placeholder="Write about your day..."
+              value={content}
+              onChangeText={setContent}
+              textAlignVertical="top"
+              placeholderTextColor="#b8b8ff"
+            />
+          </ScrollView>
         </View>
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
           <Text style={styles.saveText}>
@@ -197,21 +212,23 @@ const styles = StyleSheet.create({
   },
   container: {
     flexGrow: 1,
-    justifyContent: "center",
     alignItems: "center",
     padding: 24,
+    paddingTop: 24,
   },
   card: {
     width: "100%",
     backgroundColor: "#f8f6ff",
-    borderRadius: 28,
-    padding: 24,
+    borderRadius: 32,
+    padding: 28,
     shadowColor: "#b8b8ff",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.13,
-    shadowRadius: 16,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 8,
     marginBottom: 32,
+    borderWidth: 1,
+    borderColor: "rgba(124, 77, 255, 0.1)",
   },
   label: {
     fontSize: 18,
@@ -232,19 +249,25 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
-  input: {
+  inputContainer: {
     backgroundColor: "#fff",
+    borderRadius: 18,
+    minHeight: 100,
+    maxHeight: 200,
+    shadowColor: "#b8b8ff",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  input: {
+    backgroundColor: "transparent",
     borderRadius: 18,
     minHeight: 100,
     padding: 16,
     fontSize: 16,
     fontFamily: "Manrope",
     marginBottom: 8,
-    shadowColor: "#b8b8ff",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 2,
   },
   saveButton: {
     backgroundColor: "#9575cd",

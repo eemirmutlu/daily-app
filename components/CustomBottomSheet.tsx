@@ -3,6 +3,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -88,9 +89,20 @@ export default function CustomBottomSheet({
       >
         <Text style={styles.sheetMood}>{entry.mood}</Text>
         <Text style={styles.sheetDate}>
-          {new Date(entry.date).toLocaleDateString()}
+          {new Date(entry.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            weekday: 'long'
+          })}
         </Text>
-        <Text style={styles.sheetContent}>{entry.content}</Text>
+        <ScrollView 
+          style={styles.contentScrollView}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.sheetContent}>{entry.content}</Text>
+        </ScrollView>
       </Animated.View>
     </>
   );
@@ -112,13 +124,22 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     minHeight: 500,
+    maxHeight: Dimensions.get("window").height * 0.8,
     padding: 28,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     backgroundColor: "#fff",
     zIndex: 91,
     alignItems: "center",
-    justifyContent: "center",
+  },
+  contentScrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  contentContainer: {
+    paddingVertical: 16,
+    paddingBottom: 100,
+    alignItems: "center",
   },
   sheetMood: {
     fontSize: 48,
@@ -129,11 +150,13 @@ const styles = StyleSheet.create({
     color: "#7c4dff",
     marginBottom: 16,
     fontFamily: "Manrope",
+    textAlign: "center",
   },
   sheetContent: {
     fontSize: 18,
     color: "#333",
     fontFamily: "Manrope",
     textAlign: "center",
+    lineHeight: 26,
   },
 });

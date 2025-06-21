@@ -9,7 +9,16 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.emirmutlu.daily-app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "LSApplicationQueriesSchemes": [
+          "whatsapp",
+          "twitter",
+          "instagram"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -46,6 +55,12 @@
         "projectId": "36b4f1a2-b7a2-49a4-a23b-c3046b948980"
       }
     },
-    "owner": "emirmutlu"
+    "owner": "emirmutlu",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/36b4f1a2-b7a2-49a4-a23b-c3046b948980"
+    }
   }
 }

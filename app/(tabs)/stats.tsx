@@ -2,14 +2,14 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Info } from "lucide-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
-    Animated,
-    Dimensions,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Animated,
+  Dimensions,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import ChartBottomSheet from "../../components/ChartBottomSheet";
 import MoodChart from "../../components/MoodChart";
@@ -22,7 +22,7 @@ const MOOD_MAP: Record<string, number> = {
   "😔": 2,
   "😭": 1,
 };
-const MOOD_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MOOD_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const tooltipStyles = StyleSheet.create({
   tooltip: {
@@ -74,7 +74,7 @@ export default function StatsScreen() {
   const [shouldRenderSheet, setShouldRenderSheet] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const tooltipAnim = useRef(new Animated.Value(0)).current;
-  const tooltipTimeout = useRef<NodeJS.Timeout | null>(null);
+  const tooltipTimeout = useRef<number | null>(null);
 
   useEffect(() => {
     getEntriesByWeek().then((e) => {
@@ -126,10 +126,10 @@ export default function StatsScreen() {
 
   // Chart width logic
   const screenWidth = Dimensions.get("window").width;
-  const chartWidth = screenWidth - 48;
+  const chartWidth = screenWidth - 32;
   const chartHeight = 220;
-  const bottomSheetChartWidth = Math.max(screenWidth * 1.5, 700);
-  const bottomSheetChartHeight = 320;
+  const bottomSheetChartWidth = chartWidth;
+  const bottomSheetChartHeight = chartHeight;
 
   // Calculate summary
   const moodValues = entries.map((e) => MOOD_MAP[e.mood] || 3);
@@ -144,7 +144,9 @@ export default function StatsScreen() {
       .map(() => [] as number[]);
     entries.forEach((e) => {
       const d = new Date(e.date).getDay();
-      byDay[d].push(MOOD_MAP[e.mood] || 3);
+      // Convert Sunday (0) to 6, Monday (1) to 0, etc.
+      const adjustedDay = d === 0 ? 6 : d - 1;
+      byDay[adjustedDay].push(MOOD_MAP[e.mood] || 3);
     });
     const avgs = byDay.map((arr) =>
       arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0
@@ -235,30 +237,34 @@ export default function StatsScreen() {
           onClose={closeBottomSheet}
           height={bottomSheetChartHeight + 200}
         >
-          <Text
-            style={{
-              fontSize: 22,
-              fontWeight: "bold",
-              color: "#7c4dff",
-              fontFamily: "Manrope",
-              marginBottom: 18,
-            }}
-          >
-            Detailed Mood Chart
-          </Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={true}
-            contentContainerStyle={{ minWidth: bottomSheetChartWidth }}
-          >
-            <View style={{ width: bottomSheetChartWidth }}>
-              <MoodChart
-                entries={entries}
-                width={bottomSheetChartWidth}
-                height={bottomSheetChartHeight}
-              />
+          <View style={{ width: "100%", alignItems: "center" }}>
+            <Text
+              style={{
+                fontSize: 22,
+                fontWeight: "bold",
+                color: "#7c4dff",
+                fontFamily: "Manrope",
+                marginBottom: 18,
+              }}
+            >
+              Detailed Mood Chart
+            </Text>
+            <View style={{ width: "100%", alignItems: "center" }}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={true}
+                contentContainerStyle={{ minWidth: bottomSheetChartWidth }}
+              >
+                <View style={{ width: bottomSheetChartWidth }}>
+                  <MoodChart
+                    entries={entries}
+                    width={bottomSheetChartWidth}
+                    height={bottomSheetChartHeight}
+                  />
+                </View>
+              </ScrollView>
             </View>
-          </ScrollView>
+          </View>
         </ChartBottomSheet>
       )}
     </View>
@@ -307,32 +313,37 @@ const styles = StyleSheet.create({
   card: {
     width: "100%",
     backgroundColor: "#f8f6ff",
-    borderRadius: 28,
-    padding: 24,
+    borderRadius: 32,
+    padding: 28,
     shadowColor: "#b8b8ff",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.13,
-    shadowRadius: 16,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 8,
     marginBottom: 32,
+    borderWidth: 1,
+    borderColor: "rgba(124, 77, 255, 0.1)",
   },
   summary: {
-    marginTop: 24,
+    marginTop: 28,
     backgroundColor: "#ede7f6",
-    borderRadius: 18,
-    padding: 18,
+    borderRadius: 24,
+    padding: 24,
     shadowColor: "#b8b8ff",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: "rgba(124, 77, 255, 0.08)",
   },
   summaryText: {
     fontSize: 18,
     color: "#7c4dff",
     fontFamily: "Manrope",
-    marginBottom: 8,
+    marginBottom: 12,
     textAlign: "center",
+    fontWeight: "500",
   },
   summaryValue: {
     color: "#333",

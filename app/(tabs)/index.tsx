@@ -5,13 +5,13 @@ import { useRouter } from "expo-router";
 import { Info, PlusCircle } from "lucide-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
-    Animated,
-    Easing,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Animated,
+  Easing,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import CustomBottomSheet from "../../components/CustomBottomSheet";
 import JournalCard from "../../components/JournalCard";
@@ -94,7 +94,9 @@ export default function HomeScreen() {
   // Refresh entries when screen is focused
   useFocusEffect(
     React.useCallback(() => {
-      getEntriesByWeek().then(setEntries);
+      getEntriesByWeek().then((weekEntries) => {
+        setEntries(weekEntries);
+      });
     }, [])
   );
 
@@ -127,11 +129,10 @@ export default function HomeScreen() {
     setSelectedEntry(null);
   };
 
-  // Haftanın başından 7 gün oluştur (Pazartesi-Pazar)
+  // Son 7 günü oluştur (bugün dahil geriye doğru)
   const today = dayjs();
-  const startOfWeek = today.startOf("isoWeek"); // Pazartesi başlangıç
   const daysOfWeek = Array.from({ length: 7 }, (_, i) =>
-    startOfWeek.add(i, "day")
+    today.subtract(6 - i, "day")
   );
 
   const handleInfoPress = () => {
@@ -209,7 +210,7 @@ export default function HomeScreen() {
                   ]}
                 >
                   <Text style={styles.tooltipText}>
-                    Only your moods for this week are shown here.
+                    Only your moods for the last 7 days are shown here.
                   </Text>
                 </Animated.View>
               </>
@@ -224,11 +225,24 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
         >
           {daysOfWeek.map((date, idx) => {
-            const entry = entries.find((e) =>
-              dayjs(e.date).isSame(date, "day")
-            );
+            const entry = entries.find((e) => {
+              const entryDate = dayjs(e.date);
+              const isSame = entryDate.isSame(date, "day");
+              return isSame;
+            });
             const isToday = date.isSame(today, "day");
-            const weekDayIdx = date.day() === 0 ? 6 : date.day() - 1; // Pazartesi=0, Pazar=6
+            const isYesterday = date.isSame(today.subtract(1, "day"), "day");
+            
+            // Gün etiketi oluştur
+            let dayLabel = "";
+            if (isToday) {
+              dayLabel = `${WEEK_DAYS[date.day() === 0 ? 6 : date.day() - 1]} - ${date.format("D MMMM")} (Today)`;
+            } else if (isYesterday) {
+              dayLabel = `${WEEK_DAYS[date.day() === 0 ? 6 : date.day() - 1]} - ${date.format("D MMMM")} (Yesterday)`;
+            } else {
+              dayLabel = `${WEEK_DAYS[date.day() === 0 ? 6 : date.day() - 1]} - ${date.format("D MMMM")}`;
+            }
+            
             return (
               <View
                 key={date.format("YYYY-MM-DD")}
@@ -242,7 +256,7 @@ export default function HomeScreen() {
                   }}
                 >
                   <Text style={styles.dayLabel}>
-                    {WEEK_DAYS[weekDayIdx]} - {date.format("D MMMM")}
+                    {dayLabel}
                   </Text>
                 </View>
                 {entry ? (

@@ -1,4 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import dayjs from "dayjs";
+import isoWeek from "dayjs/plugin/isoWeek";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+
+dayjs.extend(isoWeek);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 export type Entry = {
   id: string;
@@ -22,10 +30,18 @@ export const getAllEntries = async (): Promise<Entry[]> => {
 
 export const getEntriesByWeek = async (): Promise<Entry[]> => {
   const entries = await getAllEntries();
-  const now = new Date();
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday
-  return entries.filter((e) => new Date(e.date) >= startOfWeek);
+  const today = dayjs();
+  const sevenDaysAgo = today.subtract(6, "day").startOf("day"); // Bugün dahil 7 gün
+  
+  const filteredEntries = entries.filter((e) => {
+    const entryDate = dayjs(e.date);
+    const isInLast7Days = entryDate.isSameOrAfter(sevenDaysAgo, "day") && 
+                          entryDate.isSameOrBefore(today, "day");
+    
+    return isInLast7Days;
+  });
+  
+  return filteredEntries;
 };
 
 // AsyncStorage.clear();
